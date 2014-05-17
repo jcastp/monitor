@@ -31,6 +31,11 @@ def get_dict(line):
     key, value = line.split('=')
     key = key.rstrip().lstrip()
     value = value.rstrip().lstrip()
+    # Try to get the numbers as numbers
+    try:
+        value = float(value)
+    except ValueError:
+        pass
     return key, value
 
 

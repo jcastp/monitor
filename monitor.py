@@ -1,7 +1,7 @@
+import os
 import psutil
 import argparse
 from readcfg.readcfg import *
-import os
 from monitors import cpu, mem, disks, process
 
 
@@ -38,7 +38,8 @@ print config_options
 
 # Check CPU
 ## Check Thresholds
-cpu.cpu_simple_threshold()
+cpu.cpu_simple_threshold(config_options['cpu_threshold_warning'],
+                         config_options['cpu_threshold_critical'])
 
 
 

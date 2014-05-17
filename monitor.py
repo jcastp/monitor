@@ -1,10 +1,10 @@
 import psutil
 import argparse
 from readcfg.readcfg import *
+import os
 
 
-## Here will be the options
-
+## Here will be the command line arguments
 parser = argparse.ArgumentParser()
 parser.add_argument("--config",
                     help="Specify where the config file is",
@@ -14,20 +14,16 @@ parser.add_argument("--config",
 
 args = parser.parse_args()
 
+
 # Use a general config file, and derive the rest from that
 config_file = args.config
 
 # Get the configuration options
 read_general_config(config_file)
 
+read_particular_options(config_files_dict)
+
 print config_options
-
-
-
-
-
-
-
 
 
 

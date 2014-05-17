@@ -2,6 +2,7 @@ import psutil
 import argparse
 from readcfg.readcfg import *
 import os
+from monitors import cpu, mem, disks, process
 
 
 ## Here will be the command line arguments
@@ -26,24 +27,19 @@ read_particular_options(config_files_dict)
 print config_options
 
 
-
-
-
 # Read the options from file
 ## Different files for diferent systems: cpu, mem, disks, etc.
 
 
 # Get the heartbeat signal
+# TODO
 
 # Check the different systems:
 
 # Check CPU
 ## Check Thresholds
-def check_cpu(threshold):
-    # get the CPU utilization por core
-    # If the CPU usage is above the thresholds, then
-    # an error is thrown
-    return
+cpu.cpu_simple_threshold()
+
 
 
 # Check MEM

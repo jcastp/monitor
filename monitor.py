@@ -19,16 +19,14 @@ args = parser.parse_args()
 # Use a general config file, and derive the rest from that
 config_file = args.config
 
-# Get the configuration options
+# Get the configuration files
 read_general_config(config_file)
 
+# Read all the options
 read_particular_options(config_files_dict)
 
+# DEBUG
 print config_options
-
-
-# Read the options from file
-## Different files for diferent systems: cpu, mem, disks, etc.
 
 
 # Get the heartbeat signal
@@ -45,6 +43,8 @@ cpu.cpu_simple_threshold(config_options['cpu_threshold_warning'],
 
 # Check MEM
 ## Check Thresholds
+mem.mem_simple_threshold(config_options['mem_threshold_warning'],
+                         config_options['mem_threshold_critical'])
 
 
 # Check Disks

@@ -1,6 +1,7 @@
 import os
 import psutil
 import argparse
+import socket
 from readcfg.readcfg import *
 from monitors import cpu, mem, disks, process
 
@@ -16,35 +17,61 @@ parser.add_argument("--config",
 args = parser.parse_args()
 
 
+#####################################
+# Reading the options
+#####################################
+
+
 # Use a general config file, and derive the rest from that
 config_file = args.config
 
 # Get the configuration files
-read_general_config(config_file)
+config_files_dict = read_general_config(config_file)
+print config_files_dict
 
-# Read all the options
-read_particular_options(config_files_dict)
+## Read all the options
+# cpu options
+cpu_options = read_particular_options(config_files_dict["cpu_options"])
+# mem options
+mem_options = read_particular_options(config_files_dict["mem_options"])
+# disks options
+disks_options = read_disks_options(config_files_dict["disks_options"])
+# process options
+process_options = read_process_options(config_files_dict["process_options"])
 
 # DEBUG
-print config_options
+print cpu_options
+
+
+##############################
+# Get machine information
+##############################
+
+
+## Main part of the application
+# TODO Get the IP
+# Get the IP
+
+# Get the hostname
+hostname = socket.gethostname()
+
+
 
 
 # Get the heartbeat signal
-# TODO
+# TODO Does it makes sense if we send the data once a minute?
 
 # Check the different systems:
 
 # Check CPU
 ## Check Thresholds
-cpu.cpu_simple_threshold(config_options['cpu_threshold_warning'],
-                         config_options['cpu_threshold_critical'])
+cpu_usage = cpu.get_cpu()
 
 
 
 # Check MEM
 ## Check Thresholds
-mem.mem_simple_threshold(config_options['mem_threshold_warning'],
-                         config_options['mem_threshold_critical'])
+mem_data = mem.get_mem()
 
 
 # Check Disks
@@ -53,3 +80,9 @@ mem.mem_simple_threshold(config_options['mem_threshold_warning'],
 
 # Check processes
 ## Check all the processes are running
+
+
+
+
+
+print cpu_usage, mem_data

@@ -2,16 +2,6 @@
 import os
 
 
-# Dictionary of the configuration files used
-# on the application
-config_files_dict = {}
-
-
-# The dictionary of options used for the application.
-# It will be populated reading from the config files
-config_options = {}
-
-
 # Set of comment characters. Lines with this at the
 # beginning will be ignored
 comment = set(['#', ';'])
@@ -43,28 +33,40 @@ def read_general_config(filename):
     """Given a file, we get the files where we read the rest of
     the options."""
     print "Reading the general config file ..."
+    config_files_dict = {}
 
     with open(filename, 'r') as f:
         lines = f.readlines()
-
+        
         for line in lines:
             # Get rid of empty lines
             if get_fine_line(line):
                 # Get rid of the final newline character
                 key, value = get_dict(line)
                 config_files_dict[key] = value
+    return config_files_dict
+
+
+def read_particular_options(a_file):
+    """
+    """
+    config_options = {}
+    path = os.getcwd() + os.sep + a_file.replace('"', '')
+    with open(path, 'r') as f:
+        lines = f.readlines()
+        for line in lines:
+            if get_fine_line(line):
+                key, value = get_dict(line)
+                config_options[key] = value
+    return config_options
+
+
+def read_disks_options(a_file):
+    """
+    """
     return
 
-
-def read_particular_options(a_dictionary):
+def read_process_options(a_file):
     """
     """
-    for k in a_dictionary.keys():
-        path = os.getcwd() + os.sep + a_dictionary[k].replace('"', '')
-        with open(path, 'r') as f:
-            lines = f.readlines()
-            for line in lines:
-                if get_fine_line(line):
-                    key, value = get_dict(line)
-                    config_options[key] = value
     return

@@ -40,7 +40,7 @@ disks_options = read_disks_options(config_files_dict["disks_options"])
 process_options = read_process_options(config_files_dict["process_options"])
 
 # DEBUG
-print cpu_options
+print cpu_options, mem_options, disks_options, process_options
 
 
 ##############################
@@ -56,22 +56,25 @@ print cpu_options
 hostname = socket.gethostname()
 
 
-
+################################
+# Main loop of the application
+################################
 
 # Get the heartbeat signal
 # TODO Does it makes sense if we send the data once a minute?
 
 # Check the different systems:
 
-# Check CPU
-## Check Thresholds
+# Get CPU usage
 cpu_usage = cpu.get_cpu()
-
-
-
-# Check MEM
 ## Check Thresholds
+# TODO
+
+
+# Get MEM
 mem_data = mem.get_mem()
+## Check Thresholds
+# TODO
 
 
 # Check Disks
@@ -86,3 +89,6 @@ mem_data = mem.get_mem()
 
 
 print cpu_usage, mem_data
+
+#if __name__ == "__main__":
+#    main()

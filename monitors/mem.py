@@ -1,8 +1,10 @@
 ## Memory monitor functions
 import psutil
 
+
 def get_mem():
     return psutil.virtual_memory()
+
 
 def mem_simple_threshold(mem_list, warn, crit):
     """

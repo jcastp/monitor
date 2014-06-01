@@ -3,6 +3,9 @@ import psutil
 
 
 def get_mem():
+    """Returns a names tuple with the values of the memory
+    being used.
+    """
     return psutil.virtual_memory()
 
 

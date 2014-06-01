@@ -1,4 +1,5 @@
 import os
+import sys
 import psutil
 import argparse
 import socket
@@ -43,17 +44,20 @@ process_options = read_process_options(config_files_dict["process_options"])
 print cpu_options, mem_options, disks_options, process_options
 
 
+## Main part of the application
+
 ##############################
 # Get machine information
 ##############################
+# Get OS
+systemtype = sys.platform
+# Get the hostname
+hostname = socket.gethostname()
 
-
-## Main part of the application
 # TODO Get the IP
 # Get the IP
 
-# Get the hostname
-hostname = socket.gethostname()
+
 
 
 ################################
@@ -78,6 +82,8 @@ mem_data = mem.get_mem()
 
 
 # Check Disks
+partitions = disks.get_partitions()
+disks_data = disks.get_disk_usage(partitions)
 ## Check Thresholds
 
 
@@ -88,7 +94,7 @@ mem_data = mem.get_mem()
 
 
 
-print cpu_usage, mem_data
+print cpu_usage, mem_data, disks_data
 
 #if __name__ == "__main__":
 #    main()

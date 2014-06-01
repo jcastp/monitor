@@ -9,15 +9,27 @@ disk_info = collections.namedtuple("disk_info", ['device', 'mountpoint',
                                     'free', 'percent'])
 
 
-def get_partitions():
+def get_partitions(monitored=[]):
     """We get a named tuple with the data of the physical partitions
     present on the machine.
     """
-    partitions = psutil.disk_partitions()
+    # Get all the physical partitions present on the machine
+    raw_part = psutil.disk_partitions()
+    # Create and populate a set with all the mountpoints in the
+    # monitored disk file config
+    mountpoints = set()
+    for item in monitored:
+        mountpoints.add(item[1])
+        
+    # And now, we only get the partitions that are monitored in the file
+    partitions = []
+    for item in raw_part:
+        if item.mountpoint in mountpoints:
+            partitions.append(item)
     return partitions
     
 
-def get_disk_usage(partitions, monitored=None):
+def get_disk_usage(partitions):
     """Given the partitions in the machine, we select only the ones present
     in the config file to be monitorized, and we check the usage data
     of those.
@@ -43,4 +55,5 @@ def get_disk_usage(partitions, monitored=None):
 def simple_threshold_disk():
     """
     """
+    # TODO
     return

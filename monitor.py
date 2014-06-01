@@ -30,7 +30,7 @@ def main():
 
     # Get the configuration files
     config_files_dict = read_general_config(config_file)
-    #print config_files_dict
+    print config_files_dict
 
     ## Read all the options
     # cpu options
@@ -43,7 +43,10 @@ def main():
     process_options = read_process_options(config_files_dict["process_options"])
 
     # DEBUG
-    #print cpu_options, mem_options, disks_options, process_options
+    print cpu_options
+    print mem_options
+    print disks_options
+    print process_options
 
 
     ## Main part of the application
@@ -82,7 +85,7 @@ def main():
 
 
     # Check Disks
-    partitions = disks.get_partitions()
+    partitions = disks.get_partitions(disks_options)
     disks_data = disks.get_disk_usage(partitions)
     ## Check Thresholds
 
@@ -91,10 +94,10 @@ def main():
     ## Check all the processes are running
 
 
+    print cpu_usage
+    print mem_data
+    print disks_data
 
-
-
-    print cpu_usage, mem_data, disks_data
 
 if __name__ == "__main__":
     main()

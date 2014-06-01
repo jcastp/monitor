@@ -1,5 +1,6 @@
 ## This is the file storing the functions used to read the config
 import os
+import sys
 
 
 # Set of comment characters. Lines with this at the
@@ -62,9 +63,26 @@ def read_particular_options(a_file):
 
 
 def read_disks_options(a_file):
+    """It reads comma separated lines.
     """
-    """
-    return
+    # TODO check the comment, quoted with ""
+    config_options = []
+    path = os.getcwd() + os.sep + a_file.replace('"', '')
+    with open(path, 'r') as f:
+        lines=f.readlines()
+        for line in lines:
+            if get_fine_line(line):
+                d_options = tuple(line.rstrip().split(','))
+                # Check the number of arguments extracted from the
+                # options file
+                if len(d_options) != 5:
+                    print """There is an error in the disks option file.
+                    It seems that there are more parameters than allowed.
+                    """
+                    sys.exit(2)
+                config_options.append(d_options)
+    return config_options
+    
 
 def read_process_options(a_file):
     """

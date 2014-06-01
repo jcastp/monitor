@@ -40,6 +40,7 @@ def main():
     # disks options
     disks_options = read_disks_options(config_files_dict["disks_options"])
     # process options
+    # TODO complete this
     process_options = read_process_options(config_files_dict["process_options"])
 
     # DEBUG
@@ -88,16 +89,29 @@ def main():
     partitions = disks.get_partitions(disks_options)
     disks_data = disks.get_disk_usage(partitions)
     ## Check Thresholds
+    # TODO
 
 
     # Check processes
     ## Check all the processes are running
+    # TODO
 
-
+    # DEBUG
     print cpu_usage
     print mem_data
     print disks_data
-
+    
+    
+    ###############################
+    # Exporting data to json
+    ###############################
+    # TODO
+    
+    ###############################
+    # Send data to remote server
+    ###############################
+    # TODO
+    
 
 if __name__ == "__main__":
     main()

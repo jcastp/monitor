@@ -85,6 +85,26 @@ def read_disks_options(a_file):
     
 
 def read_process_options(a_file):
+    """It reads comma separated lines.
     """
-    """
-    return
+    # TODO check the comment, quoted with ""
+    config_options = []
+    path = os.getcwd() + os.sep + a_file.replace('"', '')
+    with open(path, 'r') as f:
+        lines=f.readlines()
+        for line in lines:
+            if get_fine_line(line):
+                d_options = tuple(line.rstrip().split(','))
+                # Check the number of arguments extracted from the
+                # options file
+                if len(d_options) != 6:
+                    print """There is an error in the process option file.
+                    It seems that there are more parameters than allowed.
+                    """
+                    sys.exit(2)
+                config_options.append(d_options)
+    return config_options
+
+
+# TODO Create functions to convert the tuples' values from string to
+#   a better format. Eg. int or float, or date ...

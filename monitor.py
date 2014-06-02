@@ -1,6 +1,5 @@
 import os
 import sys
-import psutil
 import argparse
 import socket
 from readcfg.readcfg import *

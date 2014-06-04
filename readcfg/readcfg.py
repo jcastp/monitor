@@ -8,6 +8,51 @@ import sys
 comment = set(['#', ';'])
 
 
+###############
+# test
+###############
+
+
+class DiskInfo:
+    def __init__(self, device = None, mountpoint = None,
+                  warning = None, critical = None,
+                  comment = None):
+        self.device = device
+        self.mountpoint = mountpoint
+        self.warning = warning
+        self.critical = critical
+        self.comment = comment
+        
+    def sanitize():
+        return
+        
+    def print():
+        return
+        
+
+class ProcessInfo:
+    def __init__(self, name = None, path = None,
+                  priority = None, starttime = None,
+                  endtime= None, comment = None):
+        self.name = name
+        self.path = path
+        self.priority = priority
+        self.starttime = starttime
+        self.endtime = endtime
+        self.comment = comment
+        
+    def sanitize():
+        return
+        
+    def print():
+        return
+
+
+########################################
+# Check and sanitize functions
+########################################
+
+
 def get_fine_line(line):
     """Given a line, it check if it's non empty, or not commented."""
     if line and line != '\n' and line[0] not in comment:
@@ -28,6 +73,43 @@ def get_dict(line):
     except ValueError:
         pass
     return key, value
+    
+    
+def sanitize_disk(a_tuple):
+    """Starting from a tuple of strings, we are going to sanitize
+    the input, so Python can work with it.
+    """
+    try:
+        # TODO Check these parameters are between 0 and 100
+        warn = float(a_tuple[2])
+        crit = float(a_tuple[3])
+    except ValueError:
+        print """It seems that you didn't entered a number in the crit and warning.
+        """
+        sys.exit(3)
+    san_tuple = (a_tuple[0], a_tuple[1], warn, crit, a_tuple[4].replace('"',''))
+    return san_tuple
+    
+    
+def sanitize_process(a_tuple):
+    """Starting from a tuple of strings, we are going to sanitize
+    the input, so Python can work with it.
+    """
+    try:
+        # TODO Check this parameter is between 1 and 5
+        priority = int(a_tuple[2])
+        # TODO Convert the hour
+    except ValueError:
+        print """It seems that you didn't entered a number in the priority field.
+        """
+        sys.exit(3)
+    san_tuple = (a_tuple[0], a_tuple[1], priority, a_tuple[3], a_tuple[4], a_tuple[5].replace('"',''))
+    return san_tuple
+    
+
+############################################
+# Reading configuration files
+############################################
 
 
 def read_general_config(filename):
@@ -72,7 +154,7 @@ def read_disks_options(a_file):
         lines=f.readlines()
         for line in lines:
             if get_fine_line(line):
-                d_options = tuple(line.rstrip().split(','))
+                d_options = sanitize_disk(tuple(line.rstrip().split(',')))
                 # Check the number of arguments extracted from the
                 # options file
                 if len(d_options) != 5:
@@ -94,7 +176,7 @@ def read_process_options(a_file):
         lines=f.readlines()
         for line in lines:
             if get_fine_line(line):
-                d_options = tuple(line.rstrip().split(','))
+                d_options = sanitize_process(tuple(line.rstrip().split(',')))
                 # Check the number of arguments extracted from the
                 # options file
                 if len(d_options) != 6:
@@ -106,5 +188,3 @@ def read_process_options(a_file):
     return config_options
 
 
-# TODO Create functions to convert the tuples' values from string to
-#   a better format. Eg. int or float, or date ...

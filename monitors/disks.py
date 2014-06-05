@@ -19,7 +19,7 @@ def get_partitions(monitored=[]):
     # monitored disk file config
     mountpoints = set()
     for item in monitored:
-        mountpoints.add(item[1])
+        mountpoints.add(item.mountpoint)
         
     # And now, we only get the partitions that are monitored in the file
     partitions = []

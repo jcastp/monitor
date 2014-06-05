@@ -85,7 +85,9 @@ def main():
 
 
     # Check Disks
+    ## We get only the partitions we have in the monitored file
     partitions = disks.get_partitions(disks_options)
+    ## And only check those partitions
     disks_data = disks.get_disk_usage(partitions)
     ## Check Thresholds
     # TODO

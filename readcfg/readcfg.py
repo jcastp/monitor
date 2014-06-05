@@ -9,7 +9,7 @@ comment = set(['#', ';'])
 
 
 ###############
-# test
+# Classes
 ###############
 
 
@@ -23,10 +23,26 @@ class DiskInfo:
         self.critical = critical
         self.comment = comment
         
-    def sanitize():
+    def sanitize(self):
+        # Get a float number from a string
+        try:
+            self.warning = float(self.warning)
+            self.critical = float(self.critical)
+        except ValueError:
+            print "Error value on the disk file. Try to put a number ..."
+            sys.exit(4)
+            
+        # Check the numbers are a percentage
+        try:
+            assert (0.0 <= self.warning <= 100.0) and (0.0 <= self.critical <= 100.0)
+        except AssertionError:
+            print "Number is not a percentage"
+            sys.exit(4)
+        # Get rid of the quotes
+        self.comment = self.comment.replace('"', '')
         return
         
-    def print():
+    def show(self):
         return
         
 
@@ -41,10 +57,26 @@ class ProcessInfo:
         self.endtime = endtime
         self.comment = comment
         
-    def sanitize():
+        
+    def sanitize(self):
+        # Get an int from a string
+        try:
+            self.priority = int(self.priority)
+        except ValueError:
+            print "Error value in process file. It seems you didn't put a number ..."
+            sys.exit(5)
+            
+        # Check the number is between boundaries
+        try:
+            assert (1 <= self.priority <= 5)
+        except AssertionError:
+            print "Priority must be between 1 and 5"
+            sys.exit(5)
+        # Get rid of the quotes
+        self.comment = self.comment.replace('"', '')
         return
         
-    def print():
+    def show(self):
         return
 
 
@@ -73,38 +105,6 @@ def get_dict(line):
     except ValueError:
         pass
     return key, value
-    
-    
-def sanitize_disk(a_tuple):
-    """Starting from a tuple of strings, we are going to sanitize
-    the input, so Python can work with it.
-    """
-    try:
-        # TODO Check these parameters are between 0 and 100
-        warn = float(a_tuple[2])
-        crit = float(a_tuple[3])
-    except ValueError:
-        print """It seems that you didn't entered a number in the crit and warning.
-        """
-        sys.exit(3)
-    san_tuple = (a_tuple[0], a_tuple[1], warn, crit, a_tuple[4].replace('"',''))
-    return san_tuple
-    
-    
-def sanitize_process(a_tuple):
-    """Starting from a tuple of strings, we are going to sanitize
-    the input, so Python can work with it.
-    """
-    try:
-        # TODO Check this parameter is between 1 and 5
-        priority = int(a_tuple[2])
-        # TODO Convert the hour
-    except ValueError:
-        print """It seems that you didn't entered a number in the priority field.
-        """
-        sys.exit(3)
-    san_tuple = (a_tuple[0], a_tuple[1], priority, a_tuple[3], a_tuple[4], a_tuple[5].replace('"',''))
-    return san_tuple
     
 
 ############################################
@@ -145,7 +145,8 @@ def read_particular_options(a_file):
 
 
 def read_disks_options(a_file):
-    """It reads comma separated lines.
+    """It reads comma separated lines from the file, and passes the
+    fields to an DiskInfo object.
     """
     # TODO check the comment, quoted with ""
     config_options = []
@@ -154,15 +155,15 @@ def read_disks_options(a_file):
         lines=f.readlines()
         for line in lines:
             if get_fine_line(line):
-                d_options = sanitize_disk(tuple(line.rstrip().split(',')))
-                # Check the number of arguments extracted from the
-                # options file
-                if len(d_options) != 5:
-                    print """There is an error in the disks option file.
-                    It seems that there are more parameters than allowed.
-                    """
-                    sys.exit(2)
-                config_options.append(d_options)
+                # Check the number of arguments are correct
+                try:
+                    device, mountpoint, warning, critical, comment = line.rstrip().split(',')
+                except ValueError:
+                    print "The number of arguments provided in the disks file is not correct."
+                    sys.exit(4)
+                temp = DiskInfo(device, mountpoint, warning, critical, comment)
+                temp.sanitize()
+                config_options.append(temp)
     return config_options
     
 
@@ -176,15 +177,15 @@ def read_process_options(a_file):
         lines=f.readlines()
         for line in lines:
             if get_fine_line(line):
-                d_options = sanitize_process(tuple(line.rstrip().split(',')))
-                # Check the number of arguments extracted from the
-                # options file
-                if len(d_options) != 6:
-                    print """There is an error in the process option file.
-                    It seems that there are more parameters than allowed.
-                    """
-                    sys.exit(2)
-                config_options.append(d_options)
+                # Check the number of arguments are correct
+                try:
+                    name, path, priority, starttime, endtime, comment = line.rstrip().split(',')
+                except ValueError:
+                    print "The number of arguments provided in the process file is not correct."
+                    sys.exit(5)
+                temp = ProcessInfo(name, path, priority, starttime, endtime, comment)
+                temp.sanitize()
+                config_options.append(temp)
     return config_options
 
 

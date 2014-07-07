@@ -8,14 +8,14 @@ from monitors import cpu, mem, disks, process
 
 def main():
 
-    ## Here will be the command line arguments
+    ## Here will be the command line arguments.
+    # At the moment, only the general config file is defined.
     parser = argparse.ArgumentParser()
     parser.add_argument("--config",
                     help="Specify where the config file is",
                     action="store",
                     default = "./config/config.cfg"
                    )
-
     args = parser.parse_args()
 
 
@@ -23,13 +23,13 @@ def main():
     # Reading the options
     #####################################
 
-
     # Use a general config file, and derive the rest from that
     config_file = args.config
 
     # Get the configuration files
     config_files_dict = read_general_config(config_file)
     print config_files_dict
+
 
     ## Read all the options
     # cpu options
@@ -39,8 +39,8 @@ def main():
     # disks options
     disks_options = read_disks_options(config_files_dict["disks_options"])
     # process options
-    # TODO complete this
     process_options = read_process_options(config_files_dict["process_options"])
+
 
     # DEBUG
     print cpu_options
@@ -75,13 +75,13 @@ def main():
     # Get CPU usage
     cpu_usage = cpu.get_cpu()
     ## Check Thresholds
-    # TODO
+    # TODO Cpu thresholds
 
 
     # Get MEM
     mem_data = mem.get_mem()
     ## Check Thresholds
-    # TODO
+    # TODO Mem thresholds
 
 
     # Check Disks
@@ -90,12 +90,13 @@ def main():
     ## And only check those partitions
     disks_data = disks.get_disk_usage(partitions)
     ## Check Thresholds
-    # TODO
+    # TODO Disks thresholds
 
 
     # Check processes
     ## Check all the processes are running
-    # TODO
+    process.check_processes(process_options)
+    # TODO Check processes running
 
     # DEBUG
     print cpu_usage
@@ -106,12 +107,12 @@ def main():
     ###############################
     # Exporting data to json
     ###############################
-    # TODO
+    # TODO Export start to json objects
     
     ###############################
     # Send data to remote server
     ###############################
-    # TODO
+    # TODO Send data to server
     
 
 if __name__ == "__main__":

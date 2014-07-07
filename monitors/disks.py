@@ -55,5 +55,5 @@ def get_disk_usage(partitions):
 def simple_threshold_disk():
     """
     """
-    # TODO
+    # TODO Complete the disks threslhold function
     return

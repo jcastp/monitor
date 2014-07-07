@@ -4,8 +4,8 @@ import sys
 
 
 # Set of comment characters. Lines with this at the
-# beginning will be ignored
-comment = set(['#', ';'])
+# beginning of the files will be ignored
+comment_chars = set(['#', ';'])
 
 
 ###############
@@ -14,6 +14,14 @@ comment = set(['#', ';'])
 
 
 class DiskInfo:
+    """Each device or mountpoint must have an instance of this class.
+    The information is as follows:
+    - device: The physical device, eg. /dev/sda1 for Linux
+    - mountpoint: The directory where the device is mounted.
+    - warning: a float between 0.0 and 100.0
+    - critical: a float between 0.0 and 100.0
+    - comment: a string to put any comments you want.
+    """
     def __init__(self, device = None, mountpoint = None,
                   warning = None, critical = None,
                   comment = None):
@@ -43,10 +51,20 @@ class DiskInfo:
         return
         
     def show(self):
+        # TODO
         return
         
 
 class ProcessInfo:
+    """Each process monitored must have an instance assigned.
+    The information is as follows:
+    - name: The process name, without the path
+    - path: the complete path of the process being executed
+    - priority: an integer between 1 and 5, being 5 the lowest
+    - starttime: the time when the process must be up and running
+    - endtime: the time when the process can be ignored
+    - comment: a string where you can put whatever you like.
+    """
     def __init__(self, name = None, path = None,
                   priority = None, starttime = None,
                   endtime= None, comment = None):
@@ -77,6 +95,7 @@ class ProcessInfo:
         return
         
     def show(self):
+        # TODO
         return
 
 
@@ -87,7 +106,7 @@ class ProcessInfo:
 
 def get_fine_line(line):
     """Given a line, it check if it's non empty, or not commented."""
-    if line and line != '\n' and line[0] not in comment:
+    if line and line != '\n' and line[0] not in comment_chars:
         return True
     return False
 
@@ -133,6 +152,7 @@ def read_general_config(filename):
 def read_particular_options(a_file):
     """
     """
+    print "Reading file " + a_file
     config_options = {}
     path = os.getcwd() + os.sep + a_file.replace('"', '')
     with open(path, 'r') as f:
@@ -148,6 +168,7 @@ def read_disks_options(a_file):
     """It reads comma separated lines from the file, and passes the
     fields to an DiskInfo object.
     """
+    print "Reading file " + a_file
     # TODO check the comment, quoted with ""
     config_options = []
     path = os.getcwd() + os.sep + a_file.replace('"', '')
@@ -170,8 +191,9 @@ def read_disks_options(a_file):
 def read_process_options(a_file):
     """It reads comma separated lines.
     """
+    print "Reading file " + a_file
     # TODO check the comment, quoted with ""
-    config_options = []
+    config_options = {}
     path = os.getcwd() + os.sep + a_file.replace('"', '')
     with open(path, 'r') as f:
         lines=f.readlines()
@@ -185,7 +207,7 @@ def read_process_options(a_file):
                     sys.exit(5)
                 temp = ProcessInfo(name, path, priority, starttime, endtime, comment)
                 temp.sanitize()
-                config_options.append(temp)
+                config_options[name] = temp
     return config_options
 
 

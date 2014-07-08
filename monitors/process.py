@@ -11,8 +11,12 @@ def check_processes(processes):
         # If the process name is in the set of the monitored processes,
         # we need to be sure the path is also the same
         if p.name() in processes.keys():
-            print p.name()
-            print p.as_dict(attrs=['exe','pid', 'name'])['exe']
-            if (processes[p.name()].path + os.sep + p.name()) == p.as_dict(attrs=['exe','pid', 'name'])['exe']:
-                print "Running"
+            # We get the info of the process
+            info_process = p.as_dict(attrs=['exe', 'pid', 'name'])
+            if (processes[p.name()].path + os.sep + p.name()) == info_process['exe']:
+                print "Process " + info_process['exe'] + " is running."
+            else:
+                # TODO Raise an alert for the process is not running
+                print "Process " + processes[p.name()].path + os.sep + p.name() + " is NOT RUNNING."
+                pass
             

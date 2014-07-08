@@ -2,6 +2,7 @@ import os
 import sys
 import argparse
 import socket
+import time
 from readcfg.readcfg import *
 from monitors import cpu, mem, disks, process
 
@@ -32,6 +33,8 @@ def main():
 
 
     ## Read all the options
+    # global options
+    global_options = read_particular_options(config_files_dict["global_options"])
     # cpu options
     cpu_options = read_particular_options(config_files_dict["cpu_options"])
     # mem options
@@ -43,6 +46,7 @@ def main():
 
 
     # DEBUG
+    print global_options
     print cpu_options
     print mem_options
     print disks_options
@@ -59,61 +63,70 @@ def main():
     # Get the hostname
     hostname = socket.gethostname()
 
-    # TODO Get the IP
-    # Get the IP
+    # TODO Check if the IP provided is the right one
+    ipaddres = socket.gethostbyname(socket.gethostname())
 
 
     ################################
     # Main loop of the application
     ################################
-
-    # Get the heartbeat signal
-    # TODO Does it makes sense if we send the data once a minute?
-
-    # Check the different systems:
-
-    # Get CPU usage
-    cpu_usage = cpu.get_cpu()
-    ## Check Thresholds
-    # TODO Cpu thresholds
-
-
-    # Get MEM
-    mem_data = mem.get_mem()
-    ## Check Thresholds
-    # TODO Mem thresholds
-
-
-    # Check Disks
-    ## We get only the partitions we have in the monitored file
-    partitions = disks.get_partitions(disks_options)
-    ## And only check those partitions
-    disks_data = disks.get_disk_usage(partitions)
-    ## Check Thresholds
-    # TODO Disks thresholds
-
-
-    # Check processes
-    ## Check all the processes are running
-    process.check_processes(process_options)
-    # TODO Check processes running
-
-    # DEBUG
-    print cpu_usage
-    print mem_data
-    print disks_data
     
+    while True:
+        
+        time_start = time.time()
+
+        # Get the heartbeat signal
+        # TODO Does it makes sense if we send the data once a minute?
+
+        # Check the different systems:
+
+        # Get CPU usage
+        cpu_usage = cpu.get_cpu()
+        ## Check Thresholds
+        # TODO Cpu thresholds
+
+
+        # Get MEM
+        mem_data = mem.get_mem()
+        ## Check Thresholds
+        # TODO Mem thresholds
+
+
+        # Check Disks
+        ## We get only the partitions we have in the monitored file
+        partitions = disks.get_partitions(disks_options)
+        ## And only check those partitions
+        disks_data = disks.get_disk_usage(partitions)
+        ## Check Thresholds
+        # TODO Disks thresholds
+
+
+        # Check processes
+        ## Check all the processes are running
+        process.check_processes(process_options)
+        # TODO Check processes running
+
+        # DEBUG
+        print cpu_usage
+        print mem_data
+        print disks_data
+        
     
-    ###############################
-    # Exporting data to json
-    ###############################
-    # TODO Export start to json objects
+        ###############################
+        # Exporting data to json
+        ###############################
+        # TODO Export start to json objects
     
-    ###############################
-    # Send data to remote server
-    ###############################
-    # TODO Send data to server
-    
+        ###############################
+        # Send data to remote server
+        ###############################
+        # TODO Send data to server
+        
+        time_end = time.time()
+        delta_time = time_end - time_start
+        print delta_time
+        time.sleep(global_options["refresh_time"] - delta_time)
+        
 
 if __name__ == "__main__":
     main()

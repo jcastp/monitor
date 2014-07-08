@@ -51,7 +51,9 @@ class DiskInfo:
         return
         
     def show(self):
-        # TODO
+        """Shows the disk info, in a human readable format.
+        """
+        # TODO Implement this function
         return
         
 
@@ -95,7 +97,9 @@ class ProcessInfo:
         return
         
     def show(self):
-        # TODO
+        """Shows the process info in a human readable format
+        """
+        # TODO Implement this function
         return
 
 
